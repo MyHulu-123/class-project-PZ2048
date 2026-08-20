@@ -1,5 +1,8 @@
 #include "game_logic.h"
 
+#include <algorithm>
+#include <iostream>
+
 namespace PZ2048 {
 
 // You can add global variables here.
@@ -13,24 +16,29 @@ namespace PZ2048 {
 // Don't try to use extern variables from user_logic.cpp. You're not supposed to communicate through this way.
 // After all, the game logic on the online judger won't contain extern variables same as yours.
 // You are free to add helper functions.
+static int row_num,col_num,target;
+static std::vector<std::vector<int>> board,previous_board;
+static int score,previous_score,steps;
 
 void Start(int row_num, int col_num, int target, uint game_seed) {
-    /** implement here. **/
+    PZ2048::row_num = row_num;
+    PZ2048::col_num = col_num;
+    PZ2048::target = target;
+    score = previous_score = steps = 0;
+    srand(game_seed);
 }
 
 std::pair<int, int> EndGame() {
     /** implementation here **/
-    return {0, 0};
+    return {steps, score};
 }
 
 int GetRows() {
-    /** implementation here **/
-    return 0;
+    return row_num;
 }
 
 int GetCols() { 
-    /** implementation here **/
-    return 0;
+    return col_num;
 }
 
 bool TryRun(char dir) {
@@ -46,32 +54,33 @@ bool Undo() {
 }
 
 void SetTile(int row_index, int col_index, int value) {
-    /** implement here. **/
+    board[row_index][col_index] = value;
 }
 
 int GetTile(int row_index, int col_index) {
-    /** implement here. **/
-    return 0;
+    return board[row_index][col_index];
 }
 
 int Score() { 
-    /** implement here. **/
-    return 0;
+    return score;
 }
 
 int Steps() { 
-    /** implement here. **/
-    return 0;
+    return steps;
 }
 
 int GetTarget() { 
-    /** implement here. **/
-    return 0;
+    return target;
 }
 
 bool HasReachedTarget() {
-    /** implement here. **/
-    return false;
+    int max_number = 0;
+    for(int i = 0; i < row_num; i++){
+        for(int j = 0; j < col_num; j++){
+            max_number = std::max(max_number, board[i][j]);
+        }
+    }
+    return max_number >= target;
 }
 
 bool Stuck() {
